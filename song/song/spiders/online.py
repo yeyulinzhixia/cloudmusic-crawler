@@ -27,7 +27,7 @@ class OnlineSpider(scrapy.Spider):
             start = [i for i in mycol.find().sort("start_id",-1).limit(1)][0]['start_id']+1000
         except:
             # 第一次启动
-            start = 1860567964
+            start = 1856567964
         self.crawler.stats.set_value('start_id',start)
         for _ in range(self.pages):
             s = start
