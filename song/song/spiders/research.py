@@ -40,11 +40,10 @@ class ResearchSpider(scrapy.Spider):
         a['crawltime'] = [i['crawltime'] for i in data]
         a['time_cha'] = a['crawltime'].map(lambda x:(datetime.datetime.now()-x).days)
 
-        logging.info('需要爬取的总量',len(a[(a['time_cha']<self.day) & (a['rate']<self.rate)]))
-        result = a[(a['time_cha']<self.day) & (a['rate']<self.rate)][:self.pages]
+        result = a[(a['time_cha']<self.day) & (a['rate']>0.1) &(a['rate']<self.rate)].sample(self.pages)
         for i in zip(result['start_id'], result['end_id']):
-            s = i[0]
-            e = i[1]
+            s = int(i[0])
+            e = int(i[1])
             self.crawler.stats.set_value('start_id',s)
             self.crawler.stats.set_value('end_id',e)
             ids = [i for i in range(s,e)]
