@@ -6,6 +6,7 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
+from scrapy.exceptions import DropItem
 class CommentPipeline:
     def process_item(self, item, spider):
         return item
@@ -34,14 +35,16 @@ class MysqlPipeline:
 
 import pymongo
 from .settings import MONGO_CONFIG
+import time
 class MongoPipeline:
     def process_item(self, item, spider):
         client = pymongo.MongoClient(MONGO_CONFIG['url'])
         db = client[MONGO_CONFIG['db']]
         col = db[MONGO_CONFIG['col']]
         data = item['data']
+        data['_id'] = data['commentId']
         try:
             col.insert_one(data)
-        except:
-            pass
-        return item
+            return item
+        except Exception as e:
+            raise DropItem("重复item")
