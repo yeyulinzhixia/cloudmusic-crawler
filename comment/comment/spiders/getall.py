@@ -45,7 +45,6 @@ class GetallSpider(scrapy.Spider):
                 if item['data']['beReplied']!=None:
                     item['data']['beReplied'] =item['data']['beReplied'][0]['beRepliedCommentId']
                 yield item
-
         else:
             print(response.text)
 

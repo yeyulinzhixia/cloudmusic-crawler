@@ -8,12 +8,18 @@ import pymongo
 import pandas as pd
 import datetime
 from scrapy.utils.project import get_project_settings
-
+from ..settings import MONGO_CONFIG
 class ResearchSpider(scrapy.Spider):
     name = 'research'
     allowed_domains = ['163.com']
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'song.pipelines.MysqlPipeline': 400
+        }
+    }
     js = open('/root/Music163.js', 'r').read()
     ext = execjs.compile(js)
+
 
     def __init__(self,day=1,rate=0.2,pages = 10, *args, **kwargs):
         super(eval(self.__class__.__name__), self).__init__(*args, **kwargs)
@@ -28,10 +34,10 @@ class ResearchSpider(scrapy.Spider):
         self.crawler.stats.set_value('rate',self.rate)
         self.crawler.stats.set_value('pages',self.pages)
         #获取列表
-        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        myclient = pymongo.MongoClient(MONGO_CONFIG['url'])
         mydb = myclient["neteaselog"]
         mycol = mydb["crawlrate"]
-        data =  [i for i in mycol.find()]
+        data =  [i for i in mycol.find({'spider':None})]
         a = pd.DataFrame()
         
         a['start_id'] = [i['start_id'] for i in data]
@@ -80,7 +86,7 @@ class ResearchSpider(scrapy.Spider):
                             count += 1
                     except:
                         pass
-            myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+            myclient = pymongo.MongoClient(MONGO_CONFIG['url'])
             mydb = myclient["neteaselog"]
             mycol = mydb["crawlrate"]
             info =  {'start_id':response.meta['start_id'],'rate':count/1000,'crawltime':datetime.datetime.now()}

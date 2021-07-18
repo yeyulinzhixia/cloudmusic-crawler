@@ -74,7 +74,7 @@ EXTENSIONS = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'song.pipelines.SongPipeline': 300,
+   # 'song.pipelines.SongPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -99,3 +99,15 @@ AUTOTHROTTLE_ENABLED = True
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 # LOG_LEVEL = 'WARNING'
 
+MYSQL_CONFIG = {
+   'host':'localhost',
+   'port':3306,
+   'user':'root',
+   'password':'Wxl200825',
+   'db':'netease',
+   'charset':'utf8'
+}
+
+MONGO_CONFIG = {
+    'url':'mongodb://localhost:27017/',
+}

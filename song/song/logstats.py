@@ -15,7 +15,7 @@ from scrapy import signals
 
 logger = logging.getLogger(__name__)
 import pymongo
-
+from .settings import MONGO_CONFIG
 class LogStats:
     """Log basic scraping stats periodically"""
 
@@ -56,7 +56,7 @@ class LogStats:
         logger.info(msg, log_args, extra={'spider': spider})
 
     def spider_closed(self, spider, reason):
-        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        myclient = pymongo.MongoClient(MONGO_CONFIG['url'])
         mydb = myclient["neteaselog"]
         mycol = mydb["song"]
         mycol.insert_one(self.stats.get_stats().copy())
