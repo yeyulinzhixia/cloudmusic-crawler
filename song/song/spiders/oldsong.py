@@ -59,11 +59,13 @@ class OldsongSpider(scrapy.Spider):
                             count += 1
                     except Exception as e:
                         print(e)
-            myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-            mydb = myclient["neteaselog"]
-            mycol = mydb["crawlrate"]
-            info =  {'start_id':response.meta['start_id'],'rate':count/1000,'crawltime':datetime.datetime.now(),'spider':"song.oldsong"}
-            mycol.insert_one(info)
-            logging.info(f'爬取率：{count/1000}')
+                myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+                mydb = myclient["neteaselog"]
+                mycol = mydb["crawlrate"]
+                info =  {'start_id':response.meta['start_id'],'rate':count/1000,'crawltime':datetime.datetime.now(),'spider':"song.oldsong"}
+                mycol.insert_one(info)
+                logging.info(f'爬取率：{count/1000}')
+            else:
+                logging.warning(f'错误信息：{response.text}')
         else:
             logging.warning('IP已禁用')
